@@ -1,0 +1,1 @@
+A Object Oriented Slot Machine game system. Built to demonstrate object oriented programming for a class. 
