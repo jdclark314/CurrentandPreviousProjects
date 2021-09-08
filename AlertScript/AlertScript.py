@@ -7,8 +7,6 @@ Created Jun 21
 
 
 #import all our things
-#import urllib.request
-#from bs4 import BeautifulSoup
 from selenium import webdriver
 import time
 import pandas as pd
