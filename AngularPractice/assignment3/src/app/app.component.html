@@ -1,0 +1,12 @@
+<button class="btn btn-primary"
+        (click)="buttonClick()">
+  Display Details
+</button>
+
+<p *ngIf="buttonPress"> Secret Password will be displayed</p>
+
+<p *ngFor="let list of buttonClicks"
+   [ngStyle]="{backgroundColor: list > 4 ? 'blue' : 'transparent'}"
+   [ngClass]="{colorText: list > 4}">
+  {{ list }}
+</p>

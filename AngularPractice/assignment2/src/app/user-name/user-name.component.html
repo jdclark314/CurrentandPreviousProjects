@@ -1,0 +1,21 @@
+<p>user-name works!</p>
+
+<input type="text"
+       class="form-control"
+       [(ngModel)]="userName" />
+
+<p>{{userName}}</p>
+
+<!--<button> class="btn btn-primary"
+  [disabled]="!isEmpty()"
+  (click)="makeEmpty()">Clear Username</button>
+
+<button> class="btn btn-primary"
+         [disabled]="!isEmpty()"</button>-->
+
+<button class="btn btn-primary"
+        [disabled]="!isEmpty()"
+        (click)="makeEmpty()">
+  Clear Username
+</button>
+
