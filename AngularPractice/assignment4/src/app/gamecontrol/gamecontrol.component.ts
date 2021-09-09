@@ -7,8 +7,9 @@ import { interval } from 'rxjs';
   styleUrls: ['./gamecontrol.component.css']
 })
 export class GamecontrolComponent implements OnInit {
-  @Output() gameStarted = new EventEmitter<{ newCount: number } > ();
+  @Output() gameStarted = new EventEmitter<number> ();
   counter = 0;
+  interval;
 
   constructor() { }
 
@@ -16,17 +17,15 @@ export class GamecontrolComponent implements OnInit {
   }
 
   startGame() {
-    var intervals = setInterval(function () {
-      this.gameStarted.emit({
-        newCount: this.counter++
-      })
+    this.interval = setInterval(() => {
+      this.gameStarted.emit(this.counter + 1);
+      this.counter++;
+      //console.log(this.counter);
     }, 1000)
-    //this.counter = 
-    console.log(this.counter)
   }
 
   endGame() {
-    clearInterval()
+    clearInterval(this.interval)
   }
 
 }

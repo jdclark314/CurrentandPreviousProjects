@@ -6,10 +6,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'assignment4';
-  counter = 0
+  oddNumbers: number[] = [];
+  evenNumbers: number[] = [];
 
-  updateCounter(countData: { newCount: number }) {
-    this.counter = countData.newCount
+  onGameStarted(currentNumber: number) {
+    console.log(currentNumber);
+    if (currentNumber % 2 === 0) {
+      this.evenNumbers.push(currentNumber);
+      console.log(this.evenNumbers);
+    }
+    else {
+      this.oddNumbers.push(currentNumber);
+      console.log(currentNumber)
+    }
   }
 }
