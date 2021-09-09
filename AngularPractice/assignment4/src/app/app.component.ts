@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'assignment4';
+  counter = 0
+
+  updateCounter(countData: { newCount: number }) {
+    this.counter = countData.newCount
+  }
 }
