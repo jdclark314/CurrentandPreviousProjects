@@ -3,6 +3,9 @@
 Created Jun 21
 
 @author: jdclark905
+
+Script not verified to work with the updates that were performed on the website in Sep 2021. 
+Need to go through and reverify. 
 """
 
 
