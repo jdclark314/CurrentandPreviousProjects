@@ -1,20 +1,10 @@
-# -*- coding: utf-8 -*-
-"""
-Created Jun 21
-
-@author: jdclark905
-
-Script not verified to work with the updates that were performed on the website in Sep 2021. 
-Need to go through and reverify. 
-"""
-
-
 #import all our things
 from selenium import webdriver
 import time
 import pandas as pd
 import smtplib
 from email.message import EmailMessage
+import random
 
 def sendEmail(itemFoundList):
     """
@@ -25,11 +15,10 @@ def sendEmail(itemFoundList):
     None.
 
     """
-	#email info removed, enter within strings
     emailSender = ''
     myThroaway = ''
     newEmail = ''
-    emailRecipients = [myThroaway, newEmail]
+    emailRecipients = [myThroaway]
     password = ""
     newEmail = """
     An item you were searching for is on Nellis Auction! 
@@ -53,66 +42,50 @@ def sendEmail(itemFoundList):
 driver = webdriver.Edge(executable_path='C:\\Users\\jdcla\\Documents\\Python\\Nellis Auction Alerts\\msedgedriver.exe')
 
 #we gotta grab all the auction numbers
-mainURL = "https://www.nellisauction.com/"
+mainURL = "https://www.nellisauction.com/search"
 # get web page
 driver.get(mainURL)
 # execute script to scroll down the page
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
 print("Loading the Main page of Nellis Auction!")
-# sleep for 5s
+# sleep for abit
 time.sleep(5)
-#get all the auction numbers
-results = driver.find_elements_by_partial_link_text('#')
 
-#save the auction numbers
-auctionNumbers = []
+#first we need to find out how many pages we need to go through
+#//p choosen because that is the element of the page identifier
+results = driver.find_elements_by_xpath("//p")
+
+#there usually is only one line with the pages, so let's find it
+pageString = ""
 for i in results:
-    #we're appending 1-5 here since these numbers seem to always be the start
-    #high potential this could change so just flagging as a point to look at
-    #numbers come in as a string to be used in the URL
-    auctionNumbers.append(i.text[1:5])
+    if "Pages" in i.text:
+        print(i.text)
+        pageString = i.text
 
-#take out any duplicate values
-auctionNumbers = list(dict.fromkeys(auctionNumbers))
+#now to pull out the numbers
+pageCount = int(pageString.split( )[0])
 
+#now let's loop through the search pages
+pageRunner = 1
 titles = []
-
-for aucNum in auctionNumbers:
-    #we first need to grab each page count of the auction
-    pageURL = "https://www.nellisauction.com/auction/" + aucNum + "/bidgallery/page_1/"
-    # get web page
+while pageRunner < pageCount + 1:
+    pageURL = "https://www.nellisauction.com/search?page=" + str(pageRunner)
     driver.get(pageURL)
-    # execute script to scroll down the page
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-    # sleep for 5s
-    print("Loading Auction # " + aucNum)
-    time.sleep(5)
-    result = driver.find_element_by_xpath("//*[@class='summary']")
-    pageCount = int(result.text.split("of ")[1])
-    print("The Page Count for Auction# " + aucNum + " is " + str(pageCount))
-    for page in range(1, pageCount + 1):
-        auctionPageURL = "https://www.nellisauction.com/auction/" + aucNum + "/bidgallery/page_" + str(page) + "/"
-        driver.get(auctionPageURL)
-        # execute script to scroll down the page
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
-        # sleep for 15s
-        print("Loading Auction # " + aucNum + " currently on page " + str(page) + ".")
-        time.sleep(5)
-        results = driver.find_element_by_xpath("//*[@class='itemlist-wrapper']")
-        temp = results.text.split("\n")
-        for count, value in enumerate(temp):
-            if 'Lot #' in value:
-                titles.append(temp[count + 1])
-    print("We currently found " + str(len(titles)) + " items so far!")
+    time.sleep(random.randint(3,9))
+    results = driver.find_elements_by_xpath("//h2")
+    for i in results:
+        titles.append(i.text)
+    pageRunner += 1
 
 df = pd.DataFrame(titles)
 
-searchList = ['rug', 'patio', 'blinds', 'sofa', 'couch', 'vanity']
+searchList = ['rug', 'patio', 'blinds', 'sofa', 'couch', 'vanity', 'concrete']
 
 foundTitles = []
 for searchItem in searchList:
     for title in titles:
-        if searchItem.upper() in title:
+        if searchItem.upper() in title.upper():
             foundTitles.append(title)
             break
 
