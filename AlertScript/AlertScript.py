@@ -1,7 +1,6 @@
 #import all our things
 from selenium import webdriver
 import time
-import pandas as pd
 import smtplib
 from email.message import EmailMessage
 import random
@@ -77,8 +76,6 @@ while pageRunner < pageCount + 1:
     for i in results:
         titles.append(i.text)
     pageRunner += 1
-
-df = pd.DataFrame(titles)
 
 searchList = ['rug', 'patio', 'blinds', 'sofa', 'couch', 'vanity', 'concrete']
 
